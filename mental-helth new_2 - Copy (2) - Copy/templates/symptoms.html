@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto; text-align: left;">
+    <h2 data-translate="symptoms_title" style="text-align: center; margin-bottom: 30px;">Prajna Path Assessment</h2>
+
+    <form action="{{ url_for('symptoms') }}" method="POST" id="mcq-form">
+
+        <!-- SECTION 1: EMOTIONAL -->
+        <div class="category-header">
+            <h3 data-translate="cat_emotional">Emotional Well-being</h3>
+            <p>Questions related to your mood, anxiety, and emotional stability.</p>
+        </div>
+
+        <!-- Anxiety -->
+        <div class="mcq-question-block">
+            <div class="question-row">
+                <div class="mcq-question" data-translate="q_gad">Do you often worry too much about everyday things, feel
+                    restless, or find it
+                    hard to relax?</div>
+                <button type="button" class="speaker-btn" onclick="speakText('q_gad')">🔊</button>
+            </div>
+            <div class="mcq-options">
+                <input type="checkbox" name="symptoms" value="gad" id="gad_yes" class="mcq-option-input">
+                <label for="gad_yes" class="mcq-option-label" data-translate="opt_yes_often">Yes, Often</label>
+
+                <input type="checkbox" name="symptoms" value="gad" id="gad_some" class="mcq-option-input">
+                <label for="gad_some" class="mcq-option-label" data-translate="opt_sometimes">Sometimes</label>
+
+                <input type="checkbox" name="symptoms" value="gad_restless" id="gad_little" class="mcq-option-input">
+                <label for="gad_little" class="mcq-option-label" data-translate="opt_rarely">Rarely/A little</label>
+
+                <input type="radio" name="gad_no" id="gad_no" class="mcq-option-input">
+                <label for="gad_no" class="mcq-option-label" data-translate="opt_no_never">No, Never</label>
+            </div>
+        </div>
+
+        <!-- Depression -->
+        <div class="mcq-question-block">
+            <div class="question-row">
+                <div class="mcq-question" data-translate="q_dep">Do you feel sad, hopeless, or have you lost interest in
+                    things you used to
+                    enjoy?</div>
+                <button type="button" class="speaker-btn" onclick="speakText('q_dep')">🔊</button>
+            </div>
+            <div class="mcq-options">
+                <input type="checkbox" name="symptoms" value="depression" id="dep_yes" class="mcq-option-input">
+                <label for="dep_yes" class="mcq-option-label" data-translate="opt_yes_often">Yes, Often</label>
+
+                <input type="checkbox" name="symptoms" value="depression" id="dep_some" class="mcq-option-input">
+                <label for="dep_some" class="mcq-option-label" data-translate="opt_sometimes">Sometimes</label>
+
+                <input type="checkbox" name="symptoms" value="dep_sad" id="dep_little" class="mcq-option-input">
+                <label for="dep_little" class="mcq-option-label" data-translate="opt_rarely">Rarely/A little</label>
+
+                <input type="radio" name="dep_no" id="dep_no" class="mcq-option-input">
+                <label for="dep_no" class="mcq-option-label" data-translate="opt_no_never">No, Never</label>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 2: BEHAVIORAL -->
+        <div class="category-header">
+            <h3 data-translate="cat_behavioral">Behavioral Patterns</h3>
+            <p>Questions about habits, compulsions, and attention.</p>
+        </div>
+
+        <!-- OCD -->
+        <div class="mcq-question-block">
+            <div class="question-row">
+                <div class="mcq-question" data-translate="q_ocd">Do you have thoughts that keep coming back (obsessions)
+                    or feel the need to do
+                    things over and over (compulsions)?</div>
+                <button type="button" class="speaker-btn" onclick="speakText('q_ocd')">🔊</button>
+            </div>
+            <div class="mcq-options">
+                <input type="checkbox" name="symptoms" value="ocd" id="ocd_yes" class="mcq-option-input">
+                <label for="ocd_yes" class="mcq-option-label" data-translate="opt_yes_often">Yes, Often</label>
+
+                <input type="checkbox" name="symptoms" value="ocd" id="ocd_some" class="mcq-option-input">
+                <label for="ocd_some" class="mcq-option-label" data-translate="opt_sometimes">Sometimes</label>
+
+                <input type="checkbox" name="symptoms" value="ocd" id="ocd_little" class="mcq-option-input">
+                <label for="ocd_little" class="mcq-option-label" data-translate="opt_rarely">Rarely</label>
+
+                <input type="radio" name="ocd_no" id="ocd_no" class="mcq-option-input">
+                <label for="ocd_no" class="mcq-option-label" data-translate="opt_no_never">No, Never</label>
+            </div>
+        </div>
+
+        <!-- ADHD -->
+        <div class="mcq-question-block">
+            <div class="question-row">
+                <div class="mcq-question" data-translate="q_adhd">Do you find it hard to focus, stay still, or control
+                    your impulses?</div>
+                <button type="button" class="speaker-btn" onclick="speakText('q_adhd')">🔊</button>
+            </div>
+            <div class="mcq-options">
+                <input type="checkbox" name="symptoms" value="adhd" id="adhd_yes" class="mcq-option-input">
+                <label for="adhd_yes" class="mcq-option-label" data-translate="opt_yes_often">Yes, Often</label>
+
+                <input type="checkbox" name="symptoms" value="adhd" id="adhd_some" class="mcq-option-input">
+                <label for="adhd_some" class="mcq-option-label" data-translate="opt_sometimes">Sometimes</label>
+
+                <input type="checkbox" name="symptoms" value="adhd" id="adhd_little" class="mcq-option-input">
+                <label for="adhd_little" class="mcq-option-label" data-translate="opt_rarely">Rarely</label>
+
+                <input type="radio" name="adhd_no" id="adhd_no" class="mcq-option-input">
+                <label for="adhd_no" class="mcq-option-label" data-translate="opt_no_never">No, Never</label>
+            </div>
+        </div>
+
+        <!-- Eating -->
+        <div class="mcq-question-block">
+            <div class="question-row">
+                <div class="mcq-question" data-translate="q_eating">Do you worry a lot about your body image, weight, or
+                    eating habits?</div>
+                <button type="button" class="speaker-btn" onclick="speakText('q_eating')">🔊</button>
+            </div>
+            <div class="mcq-options">
+                <input type="checkbox" name="symptoms" value="eating" id="eat_yes" class="mcq-option-input">
+                <label for="eat_yes" class="mcq-option-label" data-translate="opt_yes_often">Yes, Often</label>
+
+                <input type="checkbox" name="symptoms" value="eating" id="eat_some" class="mcq-option-input">
+                <label for="eat_some" class="mcq-option-label" data-translate="opt_sometimes">Sometimes</label>
+
+                <input type="checkbox" name="symptoms" value="eating" id="eat_little" class="mcq-option-input">
+                <label for="eat_little" class="mcq-option-label" data-translate="opt_rarely">Rarely</label>
+
+                <input type="radio" name="eat_no" id="eat_no" class="mcq-option-input">
+                <label for="eat_no" class="mcq-option-label" data-translate="opt_no_never">No, Never</label>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 3: PERSONALITY -->
+        <div class="category-header">
+            <h3 data-translate="cat_personality">Personality</h3>
+            <p>Questions about relationships, identity, and past trauma.</p>
+        </div>
+
+        <!-- Personality Disorders -->
+        <div class="mcq-question-block">
+            <div class="question-row">
+                <div class="mcq-question" data-translate="q_pers">Do your relationships feel unstable, or do you act
+                    impulsively without
+                    thinking?</div>
+                <button type="button" class="speaker-btn" onclick="speakText('q_pers')">🔊</button>
+            </div>
+            <div class="mcq-options">
+                <input type="checkbox" name="symptoms" value="personality" id="pers_yes" class="mcq-option-input">
+                <label for="pers_yes" class="mcq-option-label" data-translate="opt_yes_often">Yes, Often</label>
+
+                <input type="checkbox" name="symptoms" value="personality" id="pers_some" class="mcq-option-input">
+                <label for="pers_some" class="mcq-option-label" data-translate="opt_sometimes">Sometimes</label>
+
+                <input type="checkbox" name="symptoms" value="personality" id="pers_little" class="mcq-option-input">
+                <label for="pers_little" class="mcq-option-label" data-translate="opt_rarely">Rarely</label>
+
+                <input type="radio" name="pers_no" id="pers_no" class="mcq-option-input">
+                <label for="pers_no" class="mcq-option-label" data-translate="opt_no_never">No, Never</label>
+            </div>
+        </div>
+
+        <!-- PTSD -->
+        <div class="mcq-question-block">
+            <div class="question-row">
+                <div class="mcq-question" data-translate="q_ptsd">Do you have flashbacks, bad dreams, or anxiety about a
+                    scary event from the
+                    past?</div>
+                <button type="button" class="speaker-btn" onclick="speakText('q_ptsd')">🔊</button>
+            </div>
+            <div class="mcq-options">
+                <input type="checkbox" name="symptoms" value="ptsd" id="ptsd_yes" class="mcq-option-input">
+                <label for="ptsd_yes" class="mcq-option-label" data-translate="opt_yes_often">Yes, Often</label>
+
+                <input type="checkbox" name="symptoms" value="ptsd" id="ptsd_some" class="mcq-option-input">
+                <label for="ptsd_some" class="mcq-option-label" data-translate="opt_sometimes">Sometimes</label>
+
+                <input type="checkbox" name="symptoms" value="ptsd" id="ptsd_little" class="mcq-option-input">
+                <label for="ptsd_little" class="mcq-option-label" data-translate="opt_rarely">Rarely</label>
+
+                <input type="radio" name="ptsd_no" id="ptsd_no" class="mcq-option-input">
+                <label for="ptsd_no" class="mcq-option-label" data-translate="opt_no_never">No, Never</label>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 4: MINOR CASE -->
+        <div class="category-header">
+            <h3 data-translate="cat_minor">Minor Case</h3>
+            <p>Common daily life stressors.</p>
+        </div>
+
+        <!-- Stress -->
+        <div class="mcq-question-block">
+            <div class="question-row">
+                <div class="mcq-question" data-translate="q_stress">Do you feel very tired, easily annoyed, or burned
+                    out from work or daily life?
+                </div>
+                <button type="button" class="speaker-btn" onclick="speakText('q_stress')">🔊</button>
+            </div>
+            <div class="mcq-options">
+                <input type="checkbox" name="symptoms" value="stress" id="stress_yes" class="mcq-option-input">
+                <label for="stress_yes" class="mcq-option-label" data-translate="opt_yes_often">Yes, Totally</label>
+
+                <input type="checkbox" name="symptoms" value="stress" id="stress_some" class="mcq-option-input">
+                <label for="stress_some" class="mcq-option-label" data-translate="opt_sometimes">A bit stressed</label>
+
+                <input type="checkbox" name="symptoms" value="stress" id="stress_little" class="mcq-option-input">
+                <label for="stress_little" class="mcq-option-label" data-translate="opt_rarely">Rarely</label>
+
+                <input type="radio" name="stress_no" id="stress_no" class="mcq-option-input">
+                <label for="stress_no" class="mcq-option-label" data-translate="opt_no_never">No, Never</label>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 5: AWARENESS & HIGHLIGHTS -->
+        <div class="category-header">
+            <h3 data-translate="cat_awareness">Awareness & Highlights</h3>
+            <p>Understanding neurodiversity.</p>
+        </div>
+
+        <!-- Autism -->
+        <div class="mcq-question-block">
+            <div class="question-row">
+                <div class="mcq-question" data-translate="q_autism">Do you find it hard to understand social cues, make
+                    eye contact, or
+                    communicate with others?</div>
+                <button type="button" class="speaker-btn" onclick="speakText('q_autism')">🔊</button>
+            </div>
+            <div class="mcq-options">
+                <input type="checkbox" name="symptoms" value="autism" id="aut_yes" class="mcq-option-input">
+                <label for="aut_yes" class="mcq-option-label" data-translate="opt_yes_often">Yes, Always</label>
+
+                <input type="checkbox" name="symptoms" value="autism" id="aut_some" class="mcq-option-input">
+                <label for="aut_some" class="mcq-option-label" data-translate="opt_sometimes">Sometimes</label>
+
+                <input type="checkbox" name="symptoms" value="autism" id="aut_little" class="mcq-option-input">
+                <label for="aut_little" class="mcq-option-label" data-translate="opt_rarely">Rarely</label>
+
+                <input type="radio" name="aut_no" id="aut_no" class="mcq-option-input">
+                <label for="aut_no" class="mcq-option-label" data-translate="opt_no_never">No, Never</label>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; text-align: center;">
+            <button type="submit" class="btn" style="padding: 15px 50px; font-size: 1.2rem;"
+                data-translate="submit_btn">Generate My Report</button>
+        </div>
+    </form>
+
+    <style>
+        .category-header {
+            margin-top: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            background: rgba(13, 92, 99, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--peacock-teal);
+        }
+
+        .category-header h3 {
+            color: var(--peacock-teal);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .category-header p {
+            color: #666;
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+        }
+
+        .section-divider {
+            margin: 30px 0;
+            border: 0;
+            border-top: 1px dashed #ccc;
+        }
+
+        .question-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .speaker-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            opacity: 0.6;
+            transition: all 0.2s;
+            filter: grayscale(100%);
+        }
+
+        .speaker-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            filter: grayscale(0%);
+        }
+    </style>
+
+    <script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+</div>
+{% endblock %}

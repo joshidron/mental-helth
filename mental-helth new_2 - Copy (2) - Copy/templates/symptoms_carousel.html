@@ -1,0 +1,512 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .carousel-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .question-card {
+        display: none;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    .question-card.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .question-image {
+        width: 100%;
+        max-width: 400px;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 15px;
+        margin: 0 auto 30px;
+        display: block;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .question-text {
+        font-size: 1.5rem;
+        color: #0d5c63;
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 600;
+        line-height: 1.6;
+    }
+
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .option-card {
+        position: relative;
+    }
+
+    .option-card input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .option-card label {
+        display: block;
+        padding: 20px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .option-card input[type="checkbox"]:checked+label {
+        background: linear-gradient(135deg, #0d5c63 0%, #15757d 100%);
+        color: white;
+        border-color: #0d5c63;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(13, 92, 99, 0.3);
+    }
+
+    .option-card label:hover {
+        border-color: #0d5c63;
+        transform: translateY(-2px);
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        gap: 15px;
+    }
+
+    .nav-btn {
+        padding: 15px 40px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        flex: 1;
+    }
+
+    .btn-prev {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-next,
+    .btn-submit {
+        background: linear-gradient(135deg, #ff9933 0%, #ff6600 100%);
+        color: white;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #0d5c63 0%, #ff9933 100%);
+        transition: width 0.3s ease;
+        border-radius: 10px;
+    }
+
+    .question-counter {
+        text-align: center;
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+    }
+
+    .category-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        background: linear-gradient(135deg, #ff9933 0%, #ff6600 100%);
+        color: white;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .carousel-container {
+            padding: 15px;
+        }
+
+        .question-card {
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .question-image {
+            max-width: 100%;
+            height: 200px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+        }
+
+        .options-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .option-card label {
+            padding: 18px;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+        }
+
+        .category-badge {
+            font-size: 0.85rem;
+            padding: 6px 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .question-card {
+            padding: 20px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+        }
+
+        .question-image {
+            height: 180px;
+        }
+
+        .navigation-buttons {
+            flex-direction: column;
+        }
+
+        .nav-btn {
+            width: 100%;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .carousel-container {
+            max-width: 1000px;
+        }
+
+        .question-image {
+            max-width: 500px;
+            height: 300px;
+        }
+    }
+</style>
+
+<div class="carousel-container">
+    <h2 style="text-align: center; color: var(--peacock-teal); margin-bottom: 30px;" data-translate="symptoms_title">
+        Prajna Path Assessment
+    </h2>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <div class="question-counter" id="questionCounter"></div>
+
+    <form action="{{ url_for('symptoms') }}" method="POST" id="carousel-form">
+
+        <!-- Question 1: Anxiety -->
+        <div class="question-card active" data-question="1">
+            <div class="category-badge" data-translate="cat_emotional">Emotional Well-being</div>
+            <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&h=500&fit=crop" alt="Anxiety"
+                class="question-image">
+            <div class="question-text" data-translate="q_gad">
+                Do you often worry too much about everyday things, feel restless, or find it hard to relax?
+            </div>
+            <div class="options-grid">
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="gad" id="gad_yes" data-question="1">
+                    <label for="gad_yes" data-translate="opt_yes_often">✓ Yes, Often</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="gad" id="gad_some" data-question="1">
+                    <label for="gad_some" data-translate="opt_sometimes">~ Sometimes</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="gad_restless" id="gad_little" data-question="1">
+                    <label for="gad_little" data-translate="opt_rarely">○ Rarely</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 2: Depression -->
+        <div class="question-card" data-question="2">
+            <div class="category-badge" data-translate="cat_emotional">Emotional Well-being</div>
+            <img src="https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=800&h=500&fit=crop"
+                alt="Depression" class="question-image">
+            <div class="question-text" data-translate="q_dep">
+                Do you feel sad, hopeless, or have you lost interest in things you used to enjoy?
+            </div>
+            <div class="options-grid">
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="depression" id="dep_yes" data-question="2">
+                    <label for="dep_yes" data-translate="opt_yes_often">✓ Yes, Often</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="depression" id="dep_some" data-question="2">
+                    <label for="dep_some" data-translate="opt_sometimes">~ Sometimes</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="dep_sad" id="dep_little" data-question="2">
+                    <label for="dep_little" data-translate="opt_rarely">○ Rarely</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 3: OCD -->
+        <div class="question-card" data-question="3">
+            <div class="category-badge" data-translate="cat_behavioral">Behavioral Patterns</div>
+            <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=500&fit=crop" alt="OCD"
+                class="question-image">
+            <div class="question-text" data-translate="q_ocd">
+                Do you have thoughts that keep coming back or feel the need to do things over and over?
+            </div>
+            <div class="options-grid">
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="ocd" id="ocd_yes" data-question="3">
+                    <label for="ocd_yes" data-translate="opt_yes_often">✓ Yes, Often</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="ocd" id="ocd_some" data-question="3">
+                    <label for="ocd_some" data-translate="opt_sometimes">~ Sometimes</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="ocd" id="ocd_little" data-question="3">
+                    <label for="ocd_little" data-translate="opt_rarely">○ Rarely</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 4: ADHD -->
+        <div class="question-card" data-question="4">
+            <div class="category-badge" data-translate="cat_behavioral">Behavioral Patterns</div>
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=500&fit=crop" alt="ADHD"
+                class="question-image">
+            <div class="question-text" data-translate="q_adhd">
+                Do you find it hard to focus, stay still, or control your impulses?
+            </div>
+            <div class="options-grid">
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="adhd" id="adhd_yes" data-question="4">
+                    <label for="adhd_yes" data-translate="opt_yes_often">✓ Yes, Often</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="adhd" id="adhd_some" data-question="4">
+                    <label for="adhd_some" data-translate="opt_sometimes">~ Sometimes</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="adhd" id="adhd_little" data-question="4">
+                    <label for="adhd_little" data-translate="opt_rarely">○ Rarely</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 5: Stress -->
+        <div class="question-card" data-question="5">
+            <div class="category-badge" data-translate="cat_minor">Daily Life</div>
+            <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800&h=500&fit=crop" alt="Stress"
+                class="question-image">
+            <div class="question-text" data-translate="q_stress">
+                Do you feel very tired, easily annoyed, or burned out from work or daily life?
+            </div>
+            <div class="options-grid">
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="stress" id="stress_yes" data-question="5">
+                    <label for="stress_yes" data-translate="opt_yes_often">✓ Yes, Totally</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="stress" id="stress_some" data-question="5">
+                    <label for="stress_some" data-translate="opt_sometimes">~ A Bit Stressed</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="stress" id="stress_little" data-question="5">
+                    <label for="stress_little" data-translate="opt_rarely">○ Rarely</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 6: PTSD -->
+        <div class="question-card" data-question="6">
+            <div class="category-badge" data-translate="cat_personality">Personality & Trauma</div>
+            <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&h=500&fit=crop" alt="PTSD"
+                class="question-image">
+            <div class="question-text" data-translate="q_ptsd">
+                Do you have flashbacks, bad dreams, or anxiety about a scary event from the past?
+            </div>
+            <div class="options-grid">
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="ptsd" id="ptsd_yes" data-question="6">
+                    <label for="ptsd_yes" data-translate="opt_yes_often">✓ Yes, Often</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="ptsd" id="ptsd_some" data-question="6">
+                    <label for="ptsd_some" data-translate="opt_sometimes">~ Sometimes</label>
+                </div>
+                <div class="option-card">
+                    <input type="checkbox" name="symptoms" value="ptsd" id="ptsd_little" data-question="6">
+                    <label for="ptsd_little" data-translate="opt_rarely">○ Rarely</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-buttons">
+            <button type="button" class="nav-btn btn-prev" id="prevBtn" onclick="changeQuestion(-1)">
+                ← <span data-translate="prev_btn">Previous</span>
+            </button>
+            <button type="button" class="nav-btn btn-next" id="nextBtn" onclick="changeQuestion(1)">
+                <span data-translate="next_btn">Next</span> →
+            </button>
+            <button type="submit" class="nav-btn btn-submit" id="submitBtn" style="display: none;">
+                <span data-translate="submit_btn">Generate Report</span> 🎯
+            </button>
+        </div>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/translations.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+    let currentQuestion = 1;
+    const totalQuestions = 6;
+
+    function updateDisplay() {
+        // Hide all questions
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.classList.remove('active');
+        });
+
+        // Show current question
+        document.querySelector(`[data-question="${currentQuestion}"]`).classList.add('active');
+
+        // Update counter
+        const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+        const questionText = currentLang === 'en' ? 'Question' :
+            currentLang === 'hi' ? 'प्रश्न' : 'પ્રશ્ન';
+        const ofText = currentLang === 'en' ? 'of' :
+            currentLang === 'hi' ? 'में से' : 'માંથી';
+
+        document.getElementById('questionCounter').textContent =
+            `${questionText} ${currentQuestion} ${ofText} ${totalQuestions}`;
+
+        // Update progress bar
+        const progress = (currentQuestion / totalQuestions) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+
+        // Update buttons
+        document.getElementById('prevBtn').disabled = currentQuestion === 1;
+
+        if (currentQuestion === totalQuestions) {
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'block';
+        } else {
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('submitBtn').style.display = 'none';
+        }
+    }
+
+    function changeQuestion(direction) {
+        currentQuestion += direction;
+        if (currentQuestion < 1) currentQuestion = 1;
+        if (currentQuestion > totalQuestions) currentQuestion = totalQuestions;
+        updateDisplay();
+    }
+
+    // Auto-advance when option is selected and enforce single selection
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const questionNum = parseInt(this.getAttribute('data-question'));
+
+            // Enforce Single Selection: Uncheck others in the same question
+            if (this.checked) {
+                const groupBoxes = document.querySelectorAll(`input[data-question="${questionNum}"]`);
+                groupBoxes.forEach(box => {
+                    if (box !== this) {
+                        box.checked = false;
+                    }
+                });
+            }
+
+            // Only auto-advance if checked (not unchecked) and not on last question
+            if (this.checked && questionNum < totalQuestions) {
+                // Small delay for visual feedback
+                setTimeout(() => {
+                    currentQuestion = questionNum + 1;
+                    updateDisplay();
+                }, 400);
+            }
+        });
+    });
+
+    // Initialize
+    updateDisplay();
+
+    // Form validation
+    document.getElementById('carousel-form').addEventListener('submit', function (e) {
+        const checkedBoxes = document.querySelectorAll('input[name="symptoms"]:checked');
+        if (checkedBoxes.length === 0) {
+            e.preventDefault();
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+            const alertMsg = currentLang === 'en' ? 'Please select at least one option before generating your report.' :
+                currentLang === 'hi' ? 'कृपया अपनी रिपोर्ट बनाने से पहले कम से कम एक विकल्प चुनें।' :
+                    'કૃપા કરીને તમારી રિપોર્ટ બનાવતા પહેલા ઓછામાં ઓછો એક વિકલ્પ પસંદ કરો.';
+            alert(alertMsg);
+        }
+    });
+</script>
+
+{% endblock %}

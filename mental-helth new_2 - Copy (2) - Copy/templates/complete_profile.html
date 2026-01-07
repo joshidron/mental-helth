@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto; text-align: left;">
+    <h2 data-translate="complete_profile_title"
+        style="text-align: center; color: var(--peacock-teal); margin-bottom: 20px;">Complete User Profile</h2>
+
+    <div
+        style="text-align: center; margin-bottom: 20px; background: rgba(13, 92, 99, 0.1); padding: 10px; border-radius: 8px;">
+        <small style="color: #666;">Generated User ID</small>
+        <div style="font-family: monospace; font-size: 1.5rem; color: var(--saffron); font-weight: bold;">{{ user_id }}
+        </div>
+    </div>
+
+    <form action="{{ url_for('complete_profile') }}" method="POST">
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+
+        <!-- Pre-filled Basic Info -->
+        <h4 style="color: var(--peacock-teal); border-bottom: 1px solid #eee; padding-bottom: 5px;">Basic Details</h4>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="name" value="{{ basic_info.get('name', '') }}" required class="form-control">
+        </div>
+        <div class="row" style="display: flex; gap: 15px;">
+            <div class="form-group" style="flex: 1;">
+                <label>Age</label>
+                <input type="number" name="age" value="{{ basic_info.get('age', '') }}" required class="form-control">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>Status</label>
+                <select name="profession" class="form-control">
+                    <option value="Student" {% if basic_info.get('profession')=='Student' %}selected{% endif %}>Student
+                    </option>
+                    <option value="Working Professional" {% if basic_info.get('profession')=='Working Professional'
+                        %}selected{% endif %}>Working Professional</option>
+                    <option value="Retired" {% if basic_info.get('profession')=='Retired' %}selected{% endif %}>Retired
+                    </option>
+                    <option value="Other" {% if basic_info.get('profession')=='Other' %}selected{% endif %}>Other
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <h4 style="color: var(--peacock-teal); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">
+            Contact Info</h4>
+        <div class="form-group">
+            <label>Address</label>
+            <textarea name="address" rows="2" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Phone Number (Optional)</label>
+            <input type="tel" name="phone" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Gmail ID</label>
+            <input type="email" name="email" class="form-control">
+        </div>
+
+        <h4 style="color: var(--peacock-teal); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">
+            Family & Health</h4>
+        <div class="form-group">
+            <label>About Family</label>
+            <textarea name="family_info" rows="2" placeholder="Brief details about family members..."
+                class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Medical Conditions (if any)</label>
+            <textarea name="medical_history" rows="2" class="form-control"></textarea>
+        </div>
+
+        <h4 style="color: var(--peacock-teal); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">
+            Guardian Details</h4>
+        <div class="row" style="display: flex; gap: 15px;">
+            <div class="form-group" style="flex: 1;">
+                <label>Guardian Name</label>
+                <input type="text" name="guardian_name" class="form-control">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>Guardian Number</label>
+                <input type="tel" name="guardian_number" class="form-control">
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <button type="submit" class="btn" style="width: 100%;">Proceed to Assessment</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        /* Important for padding */
+    }
+
+    .form-control:focus {
+        border-color: var(--peacock-teal);
+        outline: none;
+    }
+</style>
+{% endblock %}

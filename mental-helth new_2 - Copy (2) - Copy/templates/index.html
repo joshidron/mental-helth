@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="welcome-modal">
+    <div id="welcome-content">
+        <div class="om-symbol">ॐ</div>
+        <h2 class="shloka-text">
+            सर्वे भवन्तु सुखिनः । <br>
+            सर्वे सन्तु निरामयाः
+        </h2>
+        <div class="shloka-divider"></div>
+        <p class="shloka-translation">
+            May all be happy, may all be free from illness.
+        </p>
+
+        <!-- Audio Player - Muted Autoplay to Bypass Restrictions -->
+        <audio id="bg-audio" autoplay loop muted preload="auto">
+            <source src="{{ url_for('static', filename='audio/free-soul-om-mantra-chants-in-two-tones-452178.mp3') }}"
+                type="audio/mpeg">
+        </audio>
+
+        <div style="margin-top: 30px;">
+            <p style="color: #666; margin-bottom: 15px;">Please select your language / भाषा चुनें</p>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn" onclick="selectLanguage('en')">English</button>
+                <button class="btn" onclick="selectLanguage('hi')">हिंदी</button>
+                <button class="btn" onclick="selectLanguage('gu')">ગુજરાતી</button>
+            </div>
+        </div>
+
+        <button class="btn btn-secondary" onclick="skipIntro()"
+            style="margin-top:20px; padding: 5px 15px; font-size: 0.9rem; background: transparent; border: 1px solid #ccc; color: #666;">
+            Skip Animation
+        </button>
+    </div>
+</div>
+
+<script>
+    // Autoplay with Muted Start, Unmute on First Interaction
+    window.addEventListener('DOMContentLoaded', () => {
+        const audio = document.getElementById('bg-audio');
+
+        // Start muted (browsers allow muted autoplay)
+        audio.muted = true;
+        audio.volume = 0.5; // Set a reasonable volume for when unmuted
+
+        // Function to unmute and ensure playing
+        const unmuteAndPlay = () => {
+            audio.muted = false;
+            audio.play().then(() => {
+                console.log("Audio unmuted and playing.");
+            }).catch(err => console.log("Unmute play failed:", err));
+            // Remove listeners after first interaction
+            removeInteractionListeners();
+        };
+
+        // Setup listeners for first interaction to unmute
+        const setupInteractionListeners = () => {
+            const events = ['click', 'mousemove', 'keydown', 'touchstart', 'scroll', 'focus'];
+            events.forEach(event => {
+                document.addEventListener(event, unmuteAndPlay, { once: true, passive: true });
+            });
+        };
+
+        const removeInteractionListeners = () => {
+            // Listeners are set with { once: true }, so they auto-remove
+        };
+
+        // Attempt initial play (muted)
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log("Muted audio started playing.");
+                // Now wait for interaction to unmute
+                setupInteractionListeners();
+            }).catch(error => {
+                console.log("Even muted autoplay blocked. Setting up interaction listeners.");
+                setupInteractionListeners();
+            });
+        }
+
+        // Additional attempt after a short delay
+        setTimeout(() => {
+            if (audio.paused) {
+                audio.play().catch(() => setupInteractionListeners());
+            }
+        }, 100);
+    });
+
+    function selectLanguage(lang) {
+        localStorage.setItem('preferred_language', lang);
+        // Direct redirect to profile
+        window.location.href = "{{ url_for('profile') }}?lang=" + lang;
+    }
+
+    function skipIntro() {
+        // Default to English if they skip without selecting
+        selectLanguage('en');
+    }
+</script>
+
+<style>
+    /* Welcome Modal Styles are in CSS file */
+    /* Ensure no main-content duplicate display */
+</style>
+{% endblock %}

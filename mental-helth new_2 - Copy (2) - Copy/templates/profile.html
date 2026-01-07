@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 0 auto;">
+    <h2 data-translate="profile_title" style="margin-bottom: 30px; color: var(--peacock-teal);">Your Profile</h2>
+    <form action="{{ url_for('profile') }}" method="POST">
+
+        <div class="input-group">
+            <input type="text" id="name" name="name" required placeholder=" " class="interactive-input">
+            <label for="name" data-translate="name_label">Name</label>
+        </div>
+
+        <div class="input-group">
+            <input type="number" id="age" name="age" min="1" max="75" required placeholder=" "
+                class="interactive-input">
+            <label for="age" data-translate="age_label">Age</label>
+        </div>
+
+        <div class="input-group">
+            <select id="profession" name="profession" required class="interactive-input">
+                <option value="" disabled selected hidden></option>
+                <option value="Student">Student</option>
+                <option value="Working Professional">Working Professional</option>
+                <option value="Retired">Retired</option>
+                <option value="Other">Other</option>
+            </select>
+            <label for="profession" data-translate="profession_label">Current Status</label>
+        </div>
+
+        <div style="margin-top: 30px; display: flex; flex-direction: column; gap: 15px;">
+            <button type="submit" name="action" value="complete" class="btn" style="width: 100%;">
+                Make Complete User Profile
+            </button>
+
+            <button type="submit" name="action" value="submit" class="btn btn-secondary"
+                style="width: 100%; background: transparent; border: 2px solid var(--saffron); color: var(--text-dark);">
+                Submit (Basic)
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Floating Label Styles */
+    .input-group {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .interactive-input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.3s;
+        background: transparent;
+    }
+
+    .interactive-input:focus {
+        border-color: var(--peacock-teal);
+    }
+
+    .input-group label {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        padding: 0 5px;
+        color: #999;
+        transition: all 0.2s;
+        pointer-events: none;
+    }
+
+    /* Move label up when input has value or is focused */
+    .interactive-input:focus+label,
+    .interactive-input:not(:placeholder-shown)+label {
+        top: 0;
+        font-size: 0.8rem;
+        color: var(--peacock-teal);
+        font-weight: 600;
+    }
+
+    /* For Select element, always float label if valid value is selected */
+    select.interactive-input:valid+label {
+        top: 0;
+        font-size: 0.8rem;
+        color: var(--peacock-teal);
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
