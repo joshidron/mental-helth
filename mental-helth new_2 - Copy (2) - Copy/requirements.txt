@@ -4,9 +4,12 @@ flask-sqlalchemy
 python-docx
 fpdf2
 reportlab
-sentence-transformers
 scikit-learn
 numpy
 tqdm
 python-dotenv
-gunicorn
+
+# ---- AI (CPU ONLY – Replit safe) ----
+torch==2.1.2+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
+sentence-transformers
