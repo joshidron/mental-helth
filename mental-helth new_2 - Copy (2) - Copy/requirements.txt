@@ -9,3 +9,4 @@ scikit-learn
 numpy
 tqdm
 python-dotenv
+gunicorn
